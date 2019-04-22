@@ -1,2 +1,4 @@
 
 *.exe
+aws-credential-setup.bat
+*.bat

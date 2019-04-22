@@ -15,3 +15,11 @@ variable "server_port" {
   default = 8080
 }
 
+variable "region" {
+        default = "us-east-1"
+}
+
+#variable "profile" {
+#    #default = "rk"
+#    description = "AWS credentials profile (from .aws/credentials, - options: default|rk|..) Enter:"
+#}

@@ -8,8 +8,17 @@
 # ------------------------------------------------------------------------------
 
 provider "aws" {
-  region = "us-east-1"
+  #shared_credentials_file = "c:\\Users\\raja\\.aws\\credentials"
+  #profile    = "${var.profile}"
+  region     = "${var.region}"
+
+  # This EC2 Instance has a public IP and will be accessible directly from the public Internet
+ 
 }
+
+#provider "aws" {
+#  region = "us-east-1"
+#}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # DEPLOY A SINGLE EC2 INSTANCE
@@ -37,10 +46,10 @@ resource "aws_instance" "example" {
 	
 
   tags {
-    Name = "rk-terraform-example",
-	AutoOn= "True",
-	AutoOff= "True",
-  AutoStop= "True"
+    Name = "rk-terraform-poc",
+	  AutoOn= "True",
+	  AutoOff= "True",
+    AutoStop= "True"
   }
 }
 
@@ -58,9 +67,53 @@ resource "aws_security_group" "instance" {
 
   # Inbound HTTP from anywhere
   ingress {
-    from_port = "${var.server_port}"
+    #from_port = "${var.server_port}"
+    from_port = "0"
     to_port = "${var.server_port}"
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+# ---------------------------------------------
+# I AM ROLE AND POLICY
+# ---------------------------------------------
+resource "aws_iam_role_policy" "test_policy" {
+  name = "test_policy"
+  role = "${aws_iam_role.test_role.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "ec2:Describe*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "test_role" {
+  name = "test_role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
 }
