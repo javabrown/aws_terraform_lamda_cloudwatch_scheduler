@@ -1,7 +1,7 @@
 import boto3
 
 # Boto Connection
-ec2 = boto3.resource('ec2', 'eu-west-2')
+ec2 = boto3.resource('ec2', 'us-east-1')
 
 def lambda_handler(event, context):
   # Filters

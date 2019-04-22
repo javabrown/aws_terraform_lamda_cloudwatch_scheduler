@@ -40,6 +40,7 @@ resource "aws_instance" "example" {
     Name = "rk-terraform-example",
 	AutoOn= "True",
 	AutoOff= "True",
+  AutoStop= "True"
   }
 }
 
